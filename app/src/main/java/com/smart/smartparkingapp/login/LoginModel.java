@@ -1,7 +1,7 @@
 package com.smart.smartparkingapp.login;
 
-import com.smart.smartparkingapp.login.Data.LoginServiceImpl;
 import com.smart.smartparkingapp.login.Entity.LoginReqParam;
+import com.smart.smartparkingapp.login.Entity.Result;
 import com.smart.smartparkingapp.login.Interfaces.LoginModelOps;
 import com.smart.smartparkingapp.login.Interfaces.LoginModelPresenterOps;
 import com.smart.smartparkingapp.login.Interfaces.LoginService;
@@ -33,8 +33,35 @@ public class LoginModel implements LoginModelOps {
 
             @Override
             public void loginFailed() {
-                loginPresenter.loginFailed();
+                loginPresenter.loginFailed(Result.LoginInvalid);
             }
         });
+    }
+
+    @Override
+    public void validateLoginParameters(LoginReqParam loginReqParam) {
+        boolean error= false;
+        if (!isEmailValid(loginReqParam.getEmail())) {
+            error = true;
+            loginPresenter.validateLoginParamFailed(Result.LoginInvalid);
+        }
+        if(!isPasswordValid(loginReqParam.getPassword())) {
+            error = true;
+            loginPresenter.validateLoginParamFailed(Result.PasswordInvalid);
+        }
+        if (!error) {
+                loginPresenter.validateLoginParamSuccess(loginReqParam);
+        }
+
+    }
+
+    private boolean isEmailValid(String email) {
+        //TODO: Replace this with your own logic
+        return email.contains("@");
+    }
+
+    private boolean isPasswordValid(String password) {
+        //TODO: Replace this with your own logic
+        return password.length() > 4;
     }
 }

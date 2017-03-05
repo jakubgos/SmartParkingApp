@@ -1,68 +1,47 @@
 package com.smart.smartparkingapp.login;
 
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 
+import com.smart.smartparkingapp.R;
 import com.smart.smartparkingapp.login.Data.LoginServiceImpl;
 import com.smart.smartparkingapp.login.Entity.LoginReqParam;
+import com.smart.smartparkingapp.login.Entity.Result;
 import com.smart.smartparkingapp.login.Interfaces.LoginModelOps;
 import com.smart.smartparkingapp.login.Interfaces.LoginModelPresenterOps;
 import com.smart.smartparkingapp.login.Interfaces.LoginPresenterOps;
 import com.smart.smartparkingapp.login.Interfaces.LoginViewOps;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by Bos on 2017-03-04.
  */
 public class LoginPresenter implements LoginPresenterOps, LoginModelPresenterOps {
 
-    private final LoginViewOps loginViewOps;
+    private WeakReference<LoginViewOps> loginViewOps;
     private final LoginModelOps loginModelOps;
     private final Handler handler = new Handler();
     public LoginPresenter(LoginViewOps loginViewOps) {
-        this.loginViewOps = loginViewOps;
+        this.loginViewOps = new WeakReference<>(loginViewOps);
         this.loginModelOps = new LoginModel(this, new LoginServiceImpl());
+    }
+
+    private LoginViewOps  getView() throws NullPointerException {
+        if ( loginViewOps != null )
+            return loginViewOps.get();
+        else
+            throw new NullPointerException("View is unavailable");
     }
 
     @Override
     public void attemptLogin(LoginReqParam loginReqParam) {
         Log.d("...","presenter attemptLogin invoked");
 
+        getView().resetLoginErrors();
 
-        //TODO przerobic to trzeba wby weryfikacja byla w loginModel + ladne wyswqietlanie bledow
-        boolean cancel = false;
-        loginViewOps.resetLoginErrors();
-        String msg = "no error";
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(loginReqParam.getPassword()) || !isPasswordValid(loginReqParam.getPassword())) {
-            msg = "Password is too short";
-            loginViewOps.showLoginError(msg);
-            cancel = true;
-        }
-
-        Log.d("...","presenter attemptLogin: Cancel " + cancel);
-
-        if (cancel) {
-
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            loginViewOps.showLoginError("no.");
-        }
-        else
-        {
-            loginViewOps.showProgress(true);
-            loginModelOps.login(loginReqParam);
-        }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        //first check if given parameters are correct (do not check with server yet)
+        loginModelOps.validateLoginParameters(loginReqParam);
     }
 
     @Override
@@ -70,14 +49,25 @@ public class LoginPresenter implements LoginPresenterOps, LoginModelPresenterOps
         handler.post(new Runnable() {
             @Override
             public void run() {
-                loginViewOps.showProgress(false);
-                loginViewOps.showMainMenuFragment();
+                getView().showProgress(false);
+                getView().showMainMenuFragment();
             }
         });
     }
 
     @Override
-    public void loginFailed() {
+    public void loginFailed(Result loginInvalid) {
+        getView().showLoginError(loginInvalid);
+    }
 
+    @Override
+    public void validateLoginParamFailed(Result loginInvalid) {
+        getView().showLoginError(loginInvalid);
+    }
+
+    @Override
+    public void validateLoginParamSuccess(LoginReqParam loginReqParam) {
+        getView().showProgress(true);
+        loginModelOps.login(loginReqParam);
     }
 }

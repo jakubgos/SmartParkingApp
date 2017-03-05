@@ -17,8 +17,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.smart.smartparkingapp.R;
 import com.smart.smartparkingapp.login.Entity.LoginReqParam;
+import com.smart.smartparkingapp.login.Entity.Result;
 import com.smart.smartparkingapp.login.Interfaces.LoginPresenterOps;
 import com.smart.smartparkingapp.login.Interfaces.LoginViewOps;
 
@@ -38,6 +41,11 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
 
     //Presenter interface
     LoginPresenterOps mPresenter;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +58,6 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -72,6 +70,9 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         addEmailsToAutoComplete();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void setupMVP() {
@@ -86,7 +87,7 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        Log.d("...","view attemptLogin invoked");
+        Log.d("...", "view attemptLogin invoked");
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
@@ -96,6 +97,7 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
         mPresenter.attemptLogin(loginReqParam);
 
     }
+
 
     /**
      * Shows the progress UI and hides the login form.
@@ -111,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
 
 
     private void addEmailsToAutoComplete() {
-        List<String> emailAddressCollection= new ArrayList<>();
+        List<String> emailAddressCollection = new ArrayList<>();
         emailAddressCollection.add("example@doe.com");
 
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
@@ -123,8 +125,24 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
     }
 
     @Override
-    public void showLoginError(String msg) {
-        mEmailView.setError(getString(R.string.error_invalid_password));
+    public void showLoginError(Result msg) {
+        switch (msg)
+        {
+            case LoginInvalid:
+                mEmailView.setError(getString(R.string.error_invalid_email));
+                break;
+            case PasswordInvalid:
+                mPasswordView.setError(getString(R.string.error_invalid_password));
+                break;
+            case AuthFailed:
+                mPasswordView.setError(getString(R.string.error_authentication_failed));
+                break;
+            default:
+                mEmailView.setError(getString(R.string.error_login_other));
+                Log.e("...","showLoginError, unexpected result code: "+ msg);
+                break;
+        }
+
     }
 
     @Override
@@ -138,7 +156,6 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
     public void showMainMenuFragment() {
         //todo: add other fragment!
     }
-
 }
 
 

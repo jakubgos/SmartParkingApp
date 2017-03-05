@@ -7,4 +7,6 @@ import com.smart.smartparkingapp.login.Entity.LoginReqParam;
  */
 public interface LoginModelOps {
     void login(LoginReqParam loginReqParam);
+
+    void validateLoginParameters(LoginReqParam loginReqParam);
 }
