@@ -7,4 +7,6 @@ import com.smart.smartparkingapp.login.Entity.LoginReqParam;
  */
 public interface LoginPresenterOps {
     void attemptLogin(LoginReqParam loginReqParam);
+
+    void onResume();
 }

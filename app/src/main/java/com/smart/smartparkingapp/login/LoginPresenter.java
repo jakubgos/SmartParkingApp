@@ -45,18 +45,25 @@ public class LoginPresenter implements LoginPresenterOps, LoginModelPresenterOps
     }
 
     @Override
+    public void onResume() {
+        getView().showProgress(false);
+    }
+
+    @Override
     public void loginSuccess() {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                getView().showProgress(false);
                 getView().showMainMenuFragment();
+                //getView().showProgress(false);
+
             }
         });
     }
 
     @Override
     public void loginFailed(Result loginInvalid) {
+        getView().showProgress(false);
         getView().showLoginError(loginInvalid);
     }
 

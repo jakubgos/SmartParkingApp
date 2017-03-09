@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 
-import com.smart.smartparkingapp.MapsActivity;
 import com.smart.smartparkingapp.login.LoginActivity;
 
 import java.util.concurrent.TimeUnit;

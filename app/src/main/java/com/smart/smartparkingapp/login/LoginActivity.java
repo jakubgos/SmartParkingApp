@@ -1,5 +1,6 @@
 package com.smart.smartparkingapp.login;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.smart.smartparkingapp.Menu.MenuActivity;
 import com.smart.smartparkingapp.R;
 import com.smart.smartparkingapp.login.Entity.LoginReqParam;
 import com.smart.smartparkingapp.login.Entity.Result;
@@ -41,11 +43,6 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
 
     //Presenter interface
     LoginPresenterOps mPresenter;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +67,14 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         addEmailsToAutoComplete();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mPresenter.onResume();
+    }
     private void setupMVP() {
         LoginPresenter presenter = new LoginPresenter(this);
         mPresenter = presenter;
@@ -154,7 +154,9 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
 
     @Override
     public void showMainMenuFragment() {
-        //todo: add other fragment!
+        Intent myIntent = new Intent(this, MenuActivity.class);
+        //myIntent.putExtra("key", value); //Optional parameters
+        this.startActivity(myIntent);
     }
 }
 
