@@ -1,4 +1,4 @@
-package com.smart.smartparkingapp.Map;
+package com.smart.smartparkingapp.map;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;

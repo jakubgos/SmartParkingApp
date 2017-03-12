@@ -3,14 +3,13 @@ package com.smart.smartparkingapp.login;
 import android.os.Handler;
 import android.util.Log;
 
-import com.smart.smartparkingapp.R;
-import com.smart.smartparkingapp.login.Data.LoginServiceImpl;
-import com.smart.smartparkingapp.login.Entity.LoginReqParam;
-import com.smart.smartparkingapp.login.Entity.Result;
-import com.smart.smartparkingapp.login.Interfaces.LoginModelOps;
-import com.smart.smartparkingapp.login.Interfaces.LoginModelPresenterOps;
-import com.smart.smartparkingapp.login.Interfaces.LoginPresenterOps;
-import com.smart.smartparkingapp.login.Interfaces.LoginViewOps;
+import com.smart.smartparkingapp.login.data.LoginServiceImpl;
+import com.smart.smartparkingapp.login.entity.LoginReqParam;
+import com.smart.smartparkingapp.login.entity.Result;
+import com.smart.smartparkingapp.login.interfaces.LoginModelOps;
+import com.smart.smartparkingapp.login.interfaces.LoginModelPresenterOps;
+import com.smart.smartparkingapp.login.interfaces.LoginPresenterOps;
+import com.smart.smartparkingapp.login.interfaces.LoginViewOps;
 
 import java.lang.ref.WeakReference;
 

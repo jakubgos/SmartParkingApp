@@ -1,4 +1,4 @@
-package com.smart.smartparkingapp.login.Interfaces;
+package com.smart.smartparkingapp.login.interfaces;
 
 /**
  * Created by Bos on 2017-03-04.

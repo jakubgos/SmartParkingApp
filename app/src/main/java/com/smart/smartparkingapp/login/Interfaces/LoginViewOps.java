@@ -1,6 +1,6 @@
-package com.smart.smartparkingapp.login.Interfaces;
+package com.smart.smartparkingapp.login.interfaces;
 
-import com.smart.smartparkingapp.login.Entity.Result;
+import com.smart.smartparkingapp.login.entity.Result;
 
 /**
  * Created by Bos on 2017-03-04.

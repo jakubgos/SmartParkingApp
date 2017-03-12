@@ -1,11 +1,11 @@
 package com.smart.smartparkingapp.login;
 
-import com.smart.smartparkingapp.login.Entity.LoginReqParam;
-import com.smart.smartparkingapp.login.Entity.Result;
-import com.smart.smartparkingapp.login.Interfaces.LoginModelOps;
-import com.smart.smartparkingapp.login.Interfaces.LoginModelPresenterOps;
-import com.smart.smartparkingapp.login.Interfaces.LoginService;
-import com.smart.smartparkingapp.login.Interfaces.LoginServiceResult;
+import com.smart.smartparkingapp.login.entity.LoginReqParam;
+import com.smart.smartparkingapp.login.entity.Result;
+import com.smart.smartparkingapp.login.interfaces.LoginModelOps;
+import com.smart.smartparkingapp.login.interfaces.LoginModelPresenterOps;
+import com.smart.smartparkingapp.login.interfaces.LoginService;
+import com.smart.smartparkingapp.login.interfaces.LoginServiceResult;
 
 /**
  * Created by Bos on 2017-03-04.

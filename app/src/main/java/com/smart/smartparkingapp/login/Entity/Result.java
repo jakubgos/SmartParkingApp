@@ -1,4 +1,4 @@
-package com.smart.smartparkingapp.login.Entity;
+package com.smart.smartparkingapp.login.entity;
 
 /**
  * Created by Bos on 2017-03-04.

@@ -5,27 +5,22 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.smart.smartparkingapp.Menu.MenuActivity;
+import com.smart.smartparkingapp.menu.MenuActivity;
 import com.smart.smartparkingapp.R;
-import com.smart.smartparkingapp.login.Entity.LoginReqParam;
-import com.smart.smartparkingapp.login.Entity.Result;
-import com.smart.smartparkingapp.login.Interfaces.LoginPresenterOps;
-import com.smart.smartparkingapp.login.Interfaces.LoginViewOps;
+import com.smart.smartparkingapp.login.entity.LoginReqParam;
+import com.smart.smartparkingapp.login.entity.Result;
+import com.smart.smartparkingapp.login.interfaces.LoginPresenterOps;
+import com.smart.smartparkingapp.login.interfaces.LoginViewOps;
 
 /**
  * A login screen that offers login via email/password.

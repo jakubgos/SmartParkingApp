@@ -1,10 +1,10 @@
-package com.smart.smartparkingapp.login.Data;
+package com.smart.smartparkingapp.login.data;
 
 import android.os.SystemClock;
 
-import com.smart.smartparkingapp.login.Entity.LoginReqParam;
-import com.smart.smartparkingapp.login.Interfaces.LoginService;
-import com.smart.smartparkingapp.login.Interfaces.LoginServiceResult;
+import com.smart.smartparkingapp.login.entity.LoginReqParam;
+import com.smart.smartparkingapp.login.interfaces.LoginService;
+import com.smart.smartparkingapp.login.interfaces.LoginServiceResult;
 
 import java.util.concurrent.TimeUnit;
 

@@ -1,12 +1,7 @@
-package com.smart.smartparkingapp.Menu;
+package com.smart.smartparkingapp.menu;
 
-import android.view.View;
-
-import com.smart.smartparkingapp.Menu.Interfaces.MenuPresenterOps;
-import com.smart.smartparkingapp.Menu.Interfaces.MenuViewOps;
-import com.smart.smartparkingapp.login.Data.LoginServiceImpl;
-import com.smart.smartparkingapp.login.Interfaces.LoginViewOps;
-import com.smart.smartparkingapp.login.LoginModel;
+import com.smart.smartparkingapp.menu.interfaces.MenuPresenterOps;
+import com.smart.smartparkingapp.menu.interfaces.MenuViewOps;
 
 import java.lang.ref.WeakReference;
 

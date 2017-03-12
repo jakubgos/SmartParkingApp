@@ -1,18 +1,15 @@
-package com.smart.smartparkingapp.Menu;
+package com.smart.smartparkingapp.menu;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuPresenter;
 import android.view.View;
 import android.widget.Button;
 
-import com.smart.smartparkingapp.Map.MapsActivity;
-import com.smart.smartparkingapp.Menu.Interfaces.MenuPresenterOps;
-import com.smart.smartparkingapp.Menu.Interfaces.MenuViewOps;
+import com.smart.smartparkingapp.map.MapsActivity;
+import com.smart.smartparkingapp.menu.interfaces.MenuPresenterOps;
+import com.smart.smartparkingapp.menu.interfaces.MenuViewOps;
 import com.smart.smartparkingapp.R;
-import com.smart.smartparkingapp.login.Interfaces.LoginPresenterOps;
-import com.smart.smartparkingapp.login.LoginPresenter;
 
 public class MenuActivity extends AppCompatActivity implements MenuViewOps {
 
