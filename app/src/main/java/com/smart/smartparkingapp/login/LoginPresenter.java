@@ -53,7 +53,7 @@ public class LoginPresenter implements LoginPresenterOps, LoginModelPresenterOps
         handler.post(new Runnable() {
             @Override
             public void run() {
-                getView().showMainMenuFragment();
+                getView().showMapActivity();
                 //getView().showProgress(false);
 
             }

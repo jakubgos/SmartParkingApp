@@ -1,10 +1,8 @@
 package com.smart.smartparkingapp.map;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,7 +10,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,10 +18,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.smart.smartparkingapp.R;
+import com.smart.smartparkingapp.map.interfaces.MapPresenter;
+import com.smart.smartparkingapp.map.interfaces.MapView;
+import com.smart.smartparkingapp.parkingList.ParkingListPresenterImpl;
+import com.smart.smartparkingapp.parkingList.ParkingListViewImpl;
 
-public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener {
+public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener, MapView {
 
     private GoogleMap mMap;
+    MapPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,12 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        setupMVP();
+    }
+
+    private void setupMVP() {
+        MapPresenter presenter = new MapPresenterImpl(this);
+        mPresenter = presenter;
     }
 
 
@@ -76,14 +84,22 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        //todo update
         if (id == R.id.find_closest) {
-            // Handle the camera action
-        } else if (id == R.id.favorite) {
+            mPresenter.findClosestParking();
+        }else if (id == R.id.favorite) {
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void loadParkingListView() {
+        Intent myIntent = new Intent(this, ParkingListViewImpl.class);
+        //myIntent.putExtra("key", value); //Optional parameters
+        this.startActivity(myIntent);
     }
 }

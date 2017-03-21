@@ -15,6 +15,7 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.smart.smartparkingapp.map.MapsActivity;
 import com.smart.smartparkingapp.menu.MenuActivity;
 import com.smart.smartparkingapp.R;
 import com.smart.smartparkingapp.login.entity.LoginReqParam;
@@ -148,8 +149,8 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
     }
 
     @Override
-    public void showMainMenuFragment() {
-        Intent myIntent = new Intent(this, MenuActivity.class);
+    public void showMapActivity() {
+        Intent myIntent = new Intent(this, MapsActivity.class);
         //myIntent.putExtra("key", value); //Optional parameters
         this.startActivity(myIntent);
     }

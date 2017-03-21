@@ -13,6 +13,6 @@ public interface LoginViewOps {
 
     void resetLoginErrors();
 
-    void showMainMenuFragment();
+    void showMapActivity();
 }
 

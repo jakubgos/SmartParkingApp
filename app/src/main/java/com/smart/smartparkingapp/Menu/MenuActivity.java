@@ -15,7 +15,6 @@ public class MenuActivity extends AppCompatActivity implements MenuViewOps {
 
     MenuPresenterOps mPresenter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
