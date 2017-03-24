@@ -39,11 +39,11 @@ public class NetworkServiceImpl implements NetworkService {
     public void getFavoriteParking(FavoriteParkingCallback callback) {
         //todo change it!
         ArrayList<Parking> result = new ArrayList<Parking>();
-        result.add(new Parking((long)1,10,100,"parking 1", new Coordinates(20,20)));
-        result.add(new Parking((long)2,10,100,"parking 2", new Coordinates(20,20)));
-        result.add(new Parking((long)3,10,100,"parking 3", new Coordinates(20,20)));
-        result.add(new Parking((long)4,10,100,"parking 4", new Coordinates(20,20)));
-        result.add(new Parking((long)5,10,100,"parking 5", new Coordinates(20,20)));
+        result.add(new Parking((long)1,100,10,"parking 1", new Coordinates(20,20)));
+        result.add(new Parking((long)2,100,10,"parking 2", new Coordinates(20,20)));
+        result.add(new Parking((long)3,100,10,"parking 3", new Coordinates(20,20)));
+        result.add(new Parking((long)4,100,10,"parking 4", new Coordinates(20,20)));
+        result.add(new Parking((long)5,100,10,"parking 5", new Coordinates(20,20)));
 
         callback.onFavoriteParkingResult(result);
 
