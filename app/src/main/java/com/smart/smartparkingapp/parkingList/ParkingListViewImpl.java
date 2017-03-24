@@ -7,12 +7,15 @@ import android.view.View;
 import android.widget.Button;
 
 import com.smart.smartparkingapp.R;
+import com.smart.smartparkingapp.data.entity.Parking;
 import com.smart.smartparkingapp.map.MapsActivity;
 import com.smart.smartparkingapp.menu.MenuPresenterImpl;
 import com.smart.smartparkingapp.menu.interfaces.MenuPresenterOps;
 import com.smart.smartparkingapp.menu.interfaces.MenuViewOps;
 import com.smart.smartparkingapp.parkingList.interfaces.ParkingListPresenter;
 import com.smart.smartparkingapp.parkingList.interfaces.ParkingListView;
+
+import java.util.ArrayList;
 
 public class ParkingListViewImpl extends AppCompatActivity implements ParkingListView {
 
@@ -26,6 +29,7 @@ public class ParkingListViewImpl extends AppCompatActivity implements ParkingLis
 
         setupMVP();
 
+        mPresenter.onStartUp();
     }
 
     private void setupMVP() {
@@ -34,5 +38,8 @@ public class ParkingListViewImpl extends AppCompatActivity implements ParkingLis
     }
 
 
+    @Override
+    public void showParkingList(ArrayList<Parking> parkingList) {
 
+    }
 }

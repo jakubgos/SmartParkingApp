@@ -16,7 +16,7 @@ public class MenuPresenterImpl implements MenuPresenterOps
 
     public MenuPresenterImpl(MenuViewOps menuViewOps) {
         this.menuViewOps = new WeakReference<>(menuViewOps);
-        //this.loginModelOps = new LoginModel(this, new LoginServiceImpl());
+        //this.loginModelOps = new LoginModel(this, new NetworkServiceImpl());
     }
 
 

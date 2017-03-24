@@ -3,7 +3,7 @@ package com.smart.smartparkingapp.login;
 import android.os.Handler;
 import android.util.Log;
 
-import com.smart.smartparkingapp.login.data.LoginServiceImpl;
+import com.smart.smartparkingapp.data.NetworkServiceImpl;
 import com.smart.smartparkingapp.login.entity.LoginReqParam;
 import com.smart.smartparkingapp.login.entity.Result;
 import com.smart.smartparkingapp.login.interfaces.LoginModelOps;
@@ -23,7 +23,7 @@ public class LoginPresenter implements LoginPresenterOps, LoginModelPresenterOps
     private final Handler handler = new Handler();
     public LoginPresenter(LoginViewOps loginViewOps) {
         this.loginViewOps = new WeakReference<>(loginViewOps);
-        this.loginModelOps = new LoginModel(this, new LoginServiceImpl());
+        this.loginModelOps = new LoginModel(this, new NetworkServiceImpl());
     }
 
     private LoginViewOps  getView() throws NullPointerException {

@@ -6,4 +6,5 @@ package com.smart.smartparkingapp.parkingList.interfaces;
 public interface ParkingListPresenter {
 
 
+    void onStartUp();
 }

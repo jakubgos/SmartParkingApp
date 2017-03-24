@@ -4,7 +4,7 @@ import com.smart.smartparkingapp.login.entity.LoginReqParam;
 import com.smart.smartparkingapp.login.entity.Result;
 import com.smart.smartparkingapp.login.interfaces.LoginModelOps;
 import com.smart.smartparkingapp.login.interfaces.LoginModelPresenterOps;
-import com.smart.smartparkingapp.login.interfaces.LoginService;
+import com.smart.smartparkingapp.data.interfaces.NetworkService;
 import com.smart.smartparkingapp.login.interfaces.LoginServiceResult;
 
 /**
@@ -13,11 +13,13 @@ import com.smart.smartparkingapp.login.interfaces.LoginServiceResult;
 
 public class LoginModel implements LoginModelOps {
 
-    private final LoginService loginService;
+    private final NetworkService loginService;
+
+    //todo remove:, replace with callback
     LoginModelPresenterOps loginPresenter;
 
 
-    public LoginModel(LoginModelPresenterOps loginPresenter, LoginService loginService) {
+    public LoginModel(LoginModelPresenterOps loginPresenter, NetworkService loginService) {
         this.loginPresenter=loginPresenter;
         this.loginService=loginService;
     }

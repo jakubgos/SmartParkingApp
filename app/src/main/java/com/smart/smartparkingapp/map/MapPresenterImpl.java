@@ -14,7 +14,7 @@ public class MapPresenterImpl implements MapPresenter {
 
     public MapPresenterImpl(MapView view) {
         this.view = new WeakReference<>(view);
-        //this.loginModelOps = new LoginModel(this, new LoginServiceImpl());
+        //this.loginModelOps = new LoginModel(this, new NetworkServiceImpl());
     }
 
     private MapView getView() throws NullPointerException {
