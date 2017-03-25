@@ -9,4 +9,6 @@ public interface LoginPresenterOps {
     void attemptLogin(LoginReqParam loginReqParam);
 
     void onResume();
+
+    void onStartup();
 }

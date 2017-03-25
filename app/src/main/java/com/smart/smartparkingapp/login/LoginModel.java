@@ -1,5 +1,6 @@
 package com.smart.smartparkingapp.login;
 
+import com.smart.smartparkingapp.data.entity.LoginData;
 import com.smart.smartparkingapp.login.entity.LoginReqParam;
 import com.smart.smartparkingapp.login.entity.Result;
 import com.smart.smartparkingapp.login.interfaces.LoginModelOps;
@@ -29,13 +30,13 @@ public class LoginModel implements LoginModelOps {
     public void login(LoginReqParam loginReqParam) {
         loginService.login(loginReqParam, new LoginServiceResult() {
             @Override
-            public void loginSuccess() {
-                loginPresenter.loginSuccess();
+            public void loginSuccess(LoginData s) {
+                loginPresenter.loginSuccess(s);
             }
 
             @Override
-            public void loginFailed() {
-                loginPresenter.loginFailed(Result.LoginInvalid);
+            public void loginFailed(LoginData loginData) {
+                loginPresenter.loginFailed(loginData);
             }
         });
     }

@@ -15,8 +15,10 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smart.smartparkingapp.data.entity.LoginData;
 import com.smart.smartparkingapp.map.MapsActivity;
-import com.smart.smartparkingapp.menu.MenuActivity;
 import com.smart.smartparkingapp.R;
 import com.smart.smartparkingapp.login.entity.LoginReqParam;
 import com.smart.smartparkingapp.login.entity.Result;
@@ -64,6 +66,8 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
         mProgressView = findViewById(R.id.login_progress);
         addEmailsToAutoComplete();
 
+        mPresenter.onStartup();
+
     }
 
     @Override
@@ -110,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
 
     private void addEmailsToAutoComplete() {
         List<String> emailAddressCollection = new ArrayList<>();
-        emailAddressCollection.add("example@doe.com");
+        emailAddressCollection.add("john.doe@gmail.com");
 
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
@@ -121,20 +125,20 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
     }
 
     @Override
-    public void showLoginError(Result msg) {
+    public void showLoginError(Result msg, String message) {
         switch (msg)
         {
             case LoginInvalid:
-                mEmailView.setError(getString(R.string.error_invalid_email));
+                mEmailView.setError(getString(R.string.error_invalid_email) + message);
                 break;
             case PasswordInvalid:
-                mPasswordView.setError(getString(R.string.error_invalid_password));
+                mPasswordView.setError(getString(R.string.error_invalid_password)+ message);
                 break;
             case AuthFailed:
-                mPasswordView.setError(getString(R.string.error_authentication_failed));
+                mEmailView.setError(getString(R.string.error_authentication_failed)+ ": " + message);
                 break;
             default:
-                mEmailView.setError(getString(R.string.error_login_other));
+                mEmailView.setError(getString(R.string.error_login_other)+ message);
                 Log.e("...","showLoginError, unexpected result code: "+ msg);
                 break;
         }
@@ -149,11 +153,17 @@ public class LoginActivity extends AppCompatActivity implements LoginViewOps {
     }
 
     @Override
-    public void showMapActivity() {
+    public void showMapActivity(LoginData s) {
         Intent myIntent = new Intent(this, MapsActivity.class);
-        //myIntent.putExtra("key", value); //Optional parameters
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            myIntent.putExtra("LOGIN_DATA",objectMapper.writeValueAsString(s));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         this.startActivity(myIntent);
     }
+
 }
 
 

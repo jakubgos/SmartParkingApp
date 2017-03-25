@@ -1,8 +1,9 @@
 package com.smart.smartparkingapp.data.entity;
 
 /**
- * Created by Bos on 2017-03-24.
+ * Created by Bos on 2017-03-25.
  */
+
 public class Coordinates {
 
     private double latitude;
@@ -13,19 +14,19 @@ public class Coordinates {
         this.longitude = longitude;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
     public double getLongitude() {
         return longitude;
     }
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 }

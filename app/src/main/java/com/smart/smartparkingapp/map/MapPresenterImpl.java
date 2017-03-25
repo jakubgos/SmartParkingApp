@@ -1,8 +1,9 @@
 package com.smart.smartparkingapp.map;
 
+import com.smart.smartparkingapp.data.entity.Coordinates;
+import com.smart.smartparkingapp.data.entity.LoginData;
 import com.smart.smartparkingapp.map.interfaces.MapPresenter;
 import com.smart.smartparkingapp.map.interfaces.MapView;
-import com.smart.smartparkingapp.parkingList.interfaces.ParkingListView;
 
 import java.lang.ref.WeakReference;
 
@@ -11,7 +12,7 @@ import java.lang.ref.WeakReference;
  */
 public class MapPresenterImpl implements MapPresenter {
     private WeakReference<MapView> view;
-
+    private Coordinates coordinates;
     public MapPresenterImpl(MapView view) {
         this.view = new WeakReference<>(view);
         //this.loginModelOps = new LoginModel(this, new NetworkServiceImpl());
@@ -27,5 +28,16 @@ public class MapPresenterImpl implements MapPresenter {
     @Override
     public void findClosestParking() {
         getView().loadParkingListView();
+    }
+
+    @Override
+    public void onStartup(LoginData loginData) {
+        getView().initGps();
+    }
+
+    @Override
+    public void reportLocation(Coordinates coordinates) {
+        this.coordinates=coordinates;
+        getView().showUserLocation(coordinates);
     }
 }

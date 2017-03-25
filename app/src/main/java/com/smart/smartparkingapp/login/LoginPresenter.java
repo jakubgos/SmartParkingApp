@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.smart.smartparkingapp.data.NetworkServiceImpl;
+import com.smart.smartparkingapp.data.entity.LoginData;
 import com.smart.smartparkingapp.login.entity.LoginReqParam;
 import com.smart.smartparkingapp.login.entity.Result;
 import com.smart.smartparkingapp.login.interfaces.LoginModelOps;
@@ -12,6 +13,8 @@ import com.smart.smartparkingapp.login.interfaces.LoginPresenterOps;
 import com.smart.smartparkingapp.login.interfaces.LoginViewOps;
 
 import java.lang.ref.WeakReference;
+
+import static com.smart.smartparkingapp.login.entity.Result.AuthFailed;
 
 /**
  * Created by Bos on 2017-03-04.
@@ -49,11 +52,15 @@ public class LoginPresenter implements LoginPresenterOps, LoginModelPresenterOps
     }
 
     @Override
-    public void loginSuccess() {
+    public void onStartup() {
+}
+
+    @Override
+    public void loginSuccess(final LoginData s) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                getView().showMapActivity();
+                getView().showMapActivity(s);
                 //getView().showProgress(false);
 
             }
@@ -61,14 +68,19 @@ public class LoginPresenter implements LoginPresenterOps, LoginModelPresenterOps
     }
 
     @Override
-    public void loginFailed(Result loginInvalid) {
+    public void loginFailed(final LoginData loginInvalid) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
         getView().showProgress(false);
-        getView().showLoginError(loginInvalid);
+        getView().showLoginError(AuthFailed, loginInvalid.getMessage());
+            }
+        });
     }
 
     @Override
     public void validateLoginParamFailed(Result loginInvalid) {
-        getView().showLoginError(loginInvalid);
+        getView().showLoginError(loginInvalid, "");
     }
 
     @Override

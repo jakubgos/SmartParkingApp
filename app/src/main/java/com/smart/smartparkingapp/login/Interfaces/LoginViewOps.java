@@ -1,5 +1,6 @@
 package com.smart.smartparkingapp.login.interfaces;
 
+import com.smart.smartparkingapp.data.entity.LoginData;
 import com.smart.smartparkingapp.login.entity.Result;
 
 /**
@@ -9,10 +10,10 @@ public interface LoginViewOps {
 
     void showProgress(boolean b);
 
-    void showLoginError(Result msg);
+    void showLoginError(Result msg, String message);
 
     void resetLoginErrors();
 
-    void showMapActivity();
+    void showMapActivity(LoginData s);
 }
 
