@@ -3,7 +3,9 @@ package com.smart.smartparkingapp.data;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.smart.smartparkingapp.data.entity.Coordinates;
 import com.smart.smartparkingapp.data.entity.LoginData;
 import com.smart.smartparkingapp.data.entity.Parking;
@@ -15,6 +17,7 @@ import com.smart.smartparkingapp.parkingList.interfaces.FavoriteParkingCallback;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Credentials;
 import okhttp3.HttpUrl;
@@ -139,13 +142,14 @@ public class NetworkServiceImpl implements NetworkService {
                 .host(SERVER_ADDRESS)
                 .port(8080)
                 .addPathSegments(PARKING_PATH)
-                .addQueryParameter("radius", "30")
+                .addQueryParameter("radius", "100")
+                .addQueryParameter("latitude", "51.752565")
+                .addQueryParameter("longitude", "19.453313")
                 .build();
 
         Request request = new Request.Builder()
                 .url(url)
-                .addHeader("Authorization", loginData.getAccess_token())
-                .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
+                .addHeader("Authorization","Bearer " + loginData.getAccess_token())
                 .build();
 
         Log.d("...", "map getParkingList request " + request.toString() + "JSON: " + json);
@@ -157,8 +161,15 @@ public class NetworkServiceImpl implements NetworkService {
                     .execute();
 
             String responseJson = response.body().string();
-
             Log.d("...", "view getParkingList result " + responseJson);
+
+            List<Parking> parkingList = objectMapper.readValue(responseJson, new TypeReference<List<Parking>>(){});
+
+            List<Parking> list = objectMapper.readValue(responseJson, TypeFactory.defaultInstance().constructCollectionType(List.class,
+                    Parking.class));
+
+            Log.d("...", "view getParkingList list " + list.toString());
+
             //LoginData loginData = objectMapper.readValue(responseJson, LoginData.class);
             //Log.d("...", "view getParkingList result loginData object" + loginData.toString());
         } catch (IOException e) {

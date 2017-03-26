@@ -15,6 +15,9 @@ public class Parking {
 
     private Coordinates coordinates;
 
+    public Parking() {
+    }
+
     public Parking(Long id, int maxCapacity, int availablePlaces, String name, Coordinates coordinates) {
         this.id = id;
         this.maxCapacity = maxCapacity;
@@ -61,5 +64,16 @@ public class Parking {
 
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
+    }
+
+    @Override
+    public String toString() {
+        return "Parking{" +
+                "id=" + id +
+                ", maxCapacity=" + maxCapacity +
+                ", availablePlaces=" + availablePlaces +
+                ", name='" + name + '\'' +
+                ", coordinates=" + coordinates +
+                '}';
     }
 }

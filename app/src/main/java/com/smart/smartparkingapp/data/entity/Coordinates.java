@@ -11,6 +11,9 @@ public class Coordinates {
     private double latitude=-1;
     private double longitude=-1;
 
+    public Coordinates() {
+    }
+
     public Coordinates(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
