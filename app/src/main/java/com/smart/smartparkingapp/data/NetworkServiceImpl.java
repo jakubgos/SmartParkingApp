@@ -2,6 +2,7 @@ package com.smart.smartparkingapp.data;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smart.smartparkingapp.data.entity.Coordinates;
 import com.smart.smartparkingapp.data.entity.LoginData;
@@ -9,13 +10,15 @@ import com.smart.smartparkingapp.data.entity.Parking;
 import com.smart.smartparkingapp.login.entity.LoginReqParam;
 import com.smart.smartparkingapp.data.interfaces.NetworkService;
 import com.smart.smartparkingapp.login.interfaces.LoginServiceResult;
+import com.smart.smartparkingapp.map.interfaces.ParkingListCallback;
 import com.smart.smartparkingapp.parkingList.interfaces.FavoriteParkingCallback;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import okhttp3.FormBody;
+import okhttp3.Credentials;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -27,9 +30,20 @@ import okhttp3.Response;
 
 public class NetworkServiceImpl implements NetworkService {
 
-    private static final String GETTING_TOKEN =
-            "http://client:secret@192.168.0.2:8080/oauth/token?grant_type=password&client_id=client&client_secret=secret&username=john.doe@gmail.com&password=password";
+    private static final String SERVER_ADDRESS =
+                                                "192.168.0.2";
+    private static final String PARKING_PATH =
+            "api/parkings";
+    private static final String GRANT_TYPE =
+            "password";
+    private static final String CLIENT_ID =
+            "client";
+    private static final String CLIENT_SECRET =
+            "secret";
 
+
+    private static final String SERVER_PATH =
+            "oauth/token";
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -40,27 +54,40 @@ public class NetworkServiceImpl implements NetworkService {
             public void run() {
                 Log.d("...", "view attemptLogin invoked");
 
-                OkHttpClient client = new OkHttpClient();
+                OkHttpClient okHttpClient = new OkHttpClient();
 
-                RequestBody formBody = new FormBody.Builder()
+                HttpUrl url = new HttpUrl.Builder()
+                        .scheme("http")
+                        .host(SERVER_ADDRESS)
+                        .port(8080)
+                        .addPathSegments(SERVER_PATH)
+                        .addQueryParameter("grant_type", GRANT_TYPE)
+                        .addQueryParameter("client_id", CLIENT_ID)
+                        .addQueryParameter("client_secret", CLIENT_SECRET)
+                        .addQueryParameter("username", loginReqParam.getEmail())
+                        .addQueryParameter("password", loginReqParam.getPassword())
                         .build();
+
                 Request request = new Request.Builder()
-                        .url(GETTING_TOKEN)
-                        .post(formBody)
+                        .url(url)
+                        .addHeader("Authorization", Credentials.basic("client", "secret"))
+                        .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), ""))
                         .build();
-
-               Log.d("...", "view attemptLogin request " + request.toString());
+                Log.d("...", "view attemptLogin request " + request.toString());
 
                 try {
-                    Response response = client.newCall(request).execute();
+                     Response response = okHttpClient
+                        .newCall(request)
+                        .execute();
+
 
                     String responseJson = response.body().string();
 
                     Log.d("...", "view attemptLogin result " + responseJson);
                     LoginData loginData = objectMapper.readValue(responseJson, LoginData.class);
-                    Log.d("...", "view attemptLogin result object" + loginData.toString());
+                    Log.d("...", "view attemptLogin result loginData object" + loginData.toString());
 
-                    if (loginData.getStatus() == -1){
+                    if (response.isSuccessful()){
                         callBack.loginSuccess(loginData);
                     }
                     else
@@ -88,6 +115,58 @@ public class NetworkServiceImpl implements NetworkService {
         result.add(new Parking((long)5,100,10,"parking 5", new Coordinates(20,20)));
 
         callback.onFavoriteParkingResult(result);
+
+    }
+
+    @Override
+    public void getParkingList(final LoginData loginData, final Coordinates coordinates, final ParkingListCallback parkingListCallback) {
+        final Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("...", "view attemptLogin invoked");
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        String json = null;
+        try {
+            json = objectMapper.writeValueAsString(coordinates);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            parkingListCallback.parkingListFailed("Failed to create Json Object");
+        }
+
+        HttpUrl url = new HttpUrl.Builder()
+                .scheme("http")
+                .host(SERVER_ADDRESS)
+                .port(8080)
+                .addPathSegments(PARKING_PATH)
+                .addQueryParameter("radius", "30")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Authorization", loginData.getAccess_token())
+                .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
+                .build();
+
+        Log.d("...", "map getParkingList request " + request.toString() + "JSON: " + json);
+
+        Response response = null;
+        try {
+            response = okHttpClient
+                    .newCall(request)
+                    .execute();
+
+            String responseJson = response.body().string();
+
+            Log.d("...", "view getParkingList result " + responseJson);
+            //LoginData loginData = objectMapper.readValue(responseJson, LoginData.class);
+            //Log.d("...", "view getParkingList result loginData object" + loginData.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+            }
+        });
+        thread.start();
 
     }
 }

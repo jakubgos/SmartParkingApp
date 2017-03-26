@@ -1,13 +1,15 @@
 package com.smart.smartparkingapp.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Created by Bos on 2017-03-25.
  */
 
 public class Coordinates {
 
-    private double latitude;
-    private double longitude;
+    private double latitude=-1;
+    private double longitude=-1;
 
     public Coordinates(double latitude, double longitude) {
         this.latitude = latitude;
@@ -28,5 +30,11 @@ public class Coordinates {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    @JsonIgnore
+    public boolean isValid(){
+        return latitude !=-1 && longitude !=-1;
+
     }
 }

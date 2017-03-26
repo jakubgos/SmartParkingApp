@@ -138,6 +138,7 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
         final LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+
                 mPresenter.reportLocation(new Coordinates(location.getLatitude(), location.getLongitude() ));
                 Log.d("...","onLocationChanged " + "lat: "+location.getLatitude() + " long: "+ location.getLongitude());
 
