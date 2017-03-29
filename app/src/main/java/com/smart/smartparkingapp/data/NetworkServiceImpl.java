@@ -3,7 +3,6 @@ package com.smart.smartparkingapp.data;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.smart.smartparkingapp.data.entity.Coordinates;
@@ -163,13 +162,14 @@ public class NetworkServiceImpl implements NetworkService {
             String responseJson = response.body().string();
             Log.d("...", "view getParkingList result " + responseJson);
 
-            List<Parking> parkingList = objectMapper.readValue(responseJson, new TypeReference<List<Parking>>(){});
+            //List<Parking> parkingList = objectMapper.readValue(responseJson, new TypeReference<List<Parking>>(){});
 
             List<Parking> list = objectMapper.readValue(responseJson, TypeFactory.defaultInstance().constructCollectionType(List.class,
                     Parking.class));
 
             Log.d("...", "view getParkingList list " + list.toString());
 
+            parkingListCallback.getParkingListResult(list);
             //LoginData loginData = objectMapper.readValue(responseJson, LoginData.class);
             //Log.d("...", "view getParkingList result loginData object" + loginData.toString());
         } catch (IOException e) {

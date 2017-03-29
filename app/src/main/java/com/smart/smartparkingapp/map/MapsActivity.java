@@ -29,12 +29,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.smart.smartparkingapp.R;
 import com.smart.smartparkingapp.data.entity.Coordinates;
 import com.smart.smartparkingapp.data.entity.LoginData;
+import com.smart.smartparkingapp.data.entity.Parking;
 import com.smart.smartparkingapp.map.interfaces.MapPresenter;
 import com.smart.smartparkingapp.map.interfaces.MapView;
 import com.smart.smartparkingapp.parkingList.ParkingListPresenterImpl;
 import com.smart.smartparkingapp.parkingList.ParkingListViewImpl;
 
 import java.io.IOException;
+import java.util.List;
 
 public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener, MapView {
 
@@ -180,6 +182,11 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void showUserLocation(Coordinates coordinates) {
+
+    }
+
+    @Override
+    public void showParkingPosition(List<Parking> list) {
 
     }
 }
