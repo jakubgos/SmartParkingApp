@@ -16,4 +16,6 @@ public interface MapView {
     void showUserLocation(Coordinates coordinates);
 
     void showParkingPosition(List<Parking> list);
+
+    void initMQTT(List<Parking> list);
 }

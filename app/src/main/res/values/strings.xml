@@ -3,7 +3,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_login">Sign in</string>
 
-    <string name="server_ip_address">192.168.0.2</string>
+    <string name="server_ip_address">192.168.0.101</string>
 
 
     <!-- Strings related to login -->
