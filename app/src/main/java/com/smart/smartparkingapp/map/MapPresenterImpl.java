@@ -55,14 +55,17 @@ public class MapPresenterImpl implements MapPresenter, MapPresenterCallBackFromM
     public void reportLocation(Coordinates coordinates) {
         Log.d("...", "reportLocation");
 
-        getView().showUserLocation(new LatLng(coordinates.getLatitude(),coordinates.getLongitude()));
 
         //first location update
         if (this.coordinates == null) {
             Log.d("...", "reportLocation, first coordinates, getting parking list ");
             mapModel.getParkingList(loginData, coordinates, this);
-            getView().moveMapUserCamera(new LatLng(coordinates.getLatitude(),coordinates.getLongitude()));
+            getView().createUserMarker(new LatLng(coordinates.getLatitude(),coordinates.getLongitude()));
+            getView().moveUserCamera(new LatLng(coordinates.getLatitude(),coordinates.getLongitude()));
+
         }
+        getView().moveUserMarker(new LatLng(coordinates.getLatitude(),coordinates.getLongitude()));
+
         this.coordinates = coordinates;
     }
 

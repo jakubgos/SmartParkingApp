@@ -54,7 +54,7 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private GoogleMap mMap;
     MapPresenter mPresenter;
-
+    MarkerOptions marker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,14 +190,23 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     @Override
-    public void showUserLocation(LatLng latLng) {
-        MarkerOptions marker = new MarkerOptions().position(latLng).title("You");
-        marker.icon(BitmapDescriptorFactory.defaultMarker((BitmapDescriptorFactory.HUE_ORANGE)));
-        mMap.addMarker(marker);    }
+    public void createUserMarker(LatLng latLng) {
+
+        if (marker==null) {
+            marker = new MarkerOptions().position(latLng).title("You");
+            marker.icon(BitmapDescriptorFactory.defaultMarker((BitmapDescriptorFactory.HUE_ORANGE)));
+            mMap.addMarker(marker);
+        }
+
+    }
 
     @Override
-    public void moveMapUserCamera(LatLng latLng) {
+    public void moveUserMarker(LatLng latLng) {
+        marker.position(latLng);
+    }
 
+    @Override
+    public void moveUserCamera(LatLng latLng) {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);
     }

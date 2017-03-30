@@ -14,11 +14,13 @@ public interface MapView {
 
     void initGps();
 
-    void showUserLocation(LatLng coordinates);
+    void createUserMarker(LatLng coordinates);
 
     void showParkingPosition(List<Parking> list);
 
     void initMQTT(List<Parking> list);
 
-    void moveMapUserCamera(LatLng latLng);
+    void moveUserMarker(LatLng latLng);
+
+    void moveUserCamera(LatLng latLng);
 }
