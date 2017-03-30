@@ -3,6 +3,7 @@ package com.smart.smartparkingapp.map;
 import android.os.Handler;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.maps.model.LatLng;
 import com.smart.smartparkingapp.data.NetworkServiceImpl;
 import com.smart.smartparkingapp.data.entity.Coordinates;
@@ -13,6 +14,7 @@ import com.smart.smartparkingapp.map.interfaces.MapPresenter;
 import com.smart.smartparkingapp.map.interfaces.MapPresenterCallBackFromModel;
 import com.smart.smartparkingapp.map.interfaces.MapView;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -71,6 +73,19 @@ public class MapPresenterImpl implements MapPresenter, MapPresenterCallBackFromM
     }
 
     @Override
+    public void messageArrivedInd(String message) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Parking parkingToModify = objectMapper.readValue(message, Parking.class);
+
+            getView().updateParkingMarker(parkingToModify);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void getParkingListResult(final List<Parking> list) {
         parkingList= list;
         Log.d("...","getParkingListResult()");
@@ -85,8 +100,26 @@ public class MapPresenterImpl implements MapPresenter, MapPresenterCallBackFromM
                     getView().showParkingPosition(p);
                 }
                 getView().centerCameraForParkings(list);
+             /*   try {
+                    Log.d("...","sleep() start");
+
+                    Thread.sleep(5000);
+                    Log.d("...","sleep end()");
+
+                    Parking parkingtotest= list.get(1);
+
+                    parkingtotest.setAvailablePlaces(11);
+                    Log.d("...",parkingtotest.toString());
+                    getView().updateParkingMarker(parkingtotest);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                */
             }
         });
+
+
 
     }
 

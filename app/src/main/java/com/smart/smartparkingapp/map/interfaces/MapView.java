@@ -24,5 +24,8 @@ public interface MapView {
 
     void moveUserCamera(LatLng latLng);
 
+
+    void updateParkingMarker(Parking parkingToModify);
+
     void centerCameraForParkings(List<Parking> list);
 }

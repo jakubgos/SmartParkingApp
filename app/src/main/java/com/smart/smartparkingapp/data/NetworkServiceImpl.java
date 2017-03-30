@@ -33,7 +33,7 @@ import okhttp3.Response;
 public class NetworkServiceImpl implements NetworkService {
 
     private static final String SERVER_ADDRESS =
-                                                "192.168.0.101";
+                                                "192.168.0.2";
     private static final String PARKING_PATH =
             "api/parkings";
     private static final String GRANT_TYPE =

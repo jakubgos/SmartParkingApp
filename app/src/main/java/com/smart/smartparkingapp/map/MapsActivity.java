@@ -30,6 +30,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.smart.smartparkingapp.R;
 import com.smart.smartparkingapp.data.entity.Coordinates;
@@ -60,7 +61,7 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
     private GoogleMap mMap;
     MapPresenter mPresenter;
     MarkerOptions marker;
-    Map<Long,MarkerOptions> parkingMarkerMap;
+    Map<Long,Marker> parkingMarkerMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +84,7 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        parkingMarkerMap = new HashMap<Long,MarkerOptions>();
+        parkingMarkerMap = new HashMap<Long,Marker>();
         setupMVP();
 
         LoginData loginData = null;
@@ -218,10 +219,23 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     @Override
+    public void updateParkingMarker(Parking parkingToModify) {
+
+        Marker markerToUpdate = parkingMarkerMap.remove(parkingToModify.getId());
+        markerToUpdate.remove();
+
+        MarkerOptions parkingMarker = new MarkerOptions().position(new LatLng(parkingToModify.getCoordinates().getLatitude(),parkingToModify.getCoordinates().getLongitude())).title(parkingToModify.getName());
+        parkingMarker.icon(BitmapDescriptorFactory.defaultMarker((determineColorMarker(parkingToModify))));
+        parkingMarker.title(prepareParkingDescription(parkingToModify));
+        Marker resultMarker = mMap.addMarker(parkingMarker);
+        parkingMarkerMap.put(parkingToModify.getId(),resultMarker);
+    }
+
+    @Override
     public void centerCameraForParkings(List<Parking> list) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        for (Map.Entry<Long, MarkerOptions> entry : parkingMarkerMap.entrySet())
+        for (Map.Entry<Long, Marker> entry : parkingMarkerMap.entrySet())
         {
             builder.include(entry.getValue().getPosition());
         }
@@ -232,12 +246,29 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void showParkingPosition(Parking parking) {
-
-
         MarkerOptions parkingMarker = new MarkerOptions().position(new LatLng(parking.getCoordinates().getLatitude(),parking.getCoordinates().getLongitude())).title(parking.getName());
-        parkingMarker.icon(BitmapDescriptorFactory.defaultMarker((BitmapDescriptorFactory.HUE_GREEN)));
-        mMap.addMarker(parkingMarker);
-        parkingMarkerMap.put(parking.getId(),parkingMarker);
+        parkingMarker.icon(BitmapDescriptorFactory.defaultMarker((determineColorMarker(parking))));
+        parkingMarker.title(prepareParkingDescription(parking));
+        Marker resultMarker = mMap.addMarker(parkingMarker);
+        parkingMarkerMap.put(parking.getId(),resultMarker);
+    }
+
+    private float determineColorMarker(Parking parking) {
+        if(parking.getAvailablePlaces() > 40) {
+            return BitmapDescriptorFactory.HUE_GREEN;
+        }
+        else if (parking.getAvailablePlaces() > 5)
+        {
+            return BitmapDescriptorFactory.HUE_YELLOW;
+        }
+        else {
+            return BitmapDescriptorFactory.HUE_RED;
+        }
+    }
+
+    private String prepareParkingDescription(Parking parking) {
+        return parking.getName()+" " + parking.getAvailablePlaces() + " / " + parking.getMaxCapacity();
+
     }
 
     @Override
@@ -304,5 +335,7 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void messageArrived(String topic, MqttMessage message){
         Log.d("Message", "Topic: "+topic+" Message: "+message.toString());
+
+        mPresenter.messageArrivedInd(message.toString());
     }
 }
