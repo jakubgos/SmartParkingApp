@@ -41,6 +41,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -85,8 +86,8 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
         }
 
         mPresenter.onStartup(loginData);
-        List<Parking>lista_test=null;
-        initMQTT(lista_test);
+       // List<Parking>lista_test=null;
+       // initMQTT(lista_test);
     }
 
     private void setupMVP() {
@@ -202,33 +203,40 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     @Override
-    public void initMQTT(List<Parking> list){
+    public void initMQTT(final List<Parking> list){
+        final int parking_num = list.size();
         String clientId = MqttClient.generateClientId();
-        final MqttAndroidClient client = new MqttAndroidClient(this.getApplicationContext(), "tcp://192.168.0.101:1883", clientId);
+        final MqttAndroidClient client = new MqttAndroidClient(this.getApplicationContext(), "tcp://192.168.0.103:1883", clientId);
         try{
-            IMqttToken login_token = client.connect();
+            MqttConnectOptions options = new MqttConnectOptions();
+            options.setPassword("guest".toCharArray());
+            options.setUserName("guest");
+            IMqttToken login_token = client.connect(options);
             client.setCallback(this);
 
             login_token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.d("Mqtt","Login successful");
-                    String topic = "carpark/parking1";//tutaj lista topiców odpowiadających wszystkim parkingom
-                    try{
-                        IMqttToken subscribe_token = client.subscribe(topic,1);
-                        subscribe_token.setActionCallback(new IMqttActionListener() {
-                            @Override
-                            public void onSuccess(IMqttToken asyncActionToken) {
-                                Log.d("Mqtt","Subscription successful");
-                            }
+                    for (int i = 0; i<parking_num; i++){
+                        Long parking_id = list.get(i).getId();
+                        final String topic = "parking/"+parking_id;//tutaj lista topiców odpowiadających wszystkim parkingom
+                        try{
+                            IMqttToken subscribe_token = client.subscribe(topic,1);
+                            subscribe_token.setActionCallback(new IMqttActionListener() {
+                                @Override
+                                public void onSuccess(IMqttToken asyncActionToken) {
+                                    Log.d("Mqtt","Subscription successful. Subscribed to topic: "+ topic);
+                                }
 
-                            @Override
-                            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                                Log.d("Mqtt","Subscription failed. Reason: "+exception);
-                            }
-                        });
-                    }catch (MqttException e){
-                        e.printStackTrace();
+                                @Override
+                                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                                    Log.d("Mqtt","Subscription to topic "+topic+" failed. Reason: "+exception);
+                                }
+                            });
+                        }catch (MqttException e){
+                            e.printStackTrace();
+                        }
                     }
                 }
 

@@ -70,7 +70,7 @@ public class MapPresenterImpl implements MapPresenter, MapPresenterCallBackFromM
     @Override
     public void getParkingListResult(final List<Parking> list) {
         getView().initMQTT(list);
-
+        Log.d("...", "getParkingListResult executed");
         handler.post(new Runnable() {
             @Override
             public void run() {

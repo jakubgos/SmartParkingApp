@@ -1,8 +1,11 @@
 package com.smart.smartparkingapp.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Bos on 2017-03-24.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Parking {
 
     private Long id;
