@@ -12,6 +12,7 @@ import android.support.design.widget.NavigationView;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,12 +22,14 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.smart.smartparkingapp.R;
 import com.smart.smartparkingapp.data.entity.Coordinates;
@@ -48,13 +51,16 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, MapView, MqttCallback{
 
     private GoogleMap mMap;
     MapPresenter mPresenter;
     MarkerOptions marker;
+    Map<Long,MarkerOptions> parkingMarkerMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +83,7 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        parkingMarkerMap = new HashMap<Long,MarkerOptions>();
         setupMVP();
 
         LoginData loginData = null;
@@ -212,8 +218,26 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     @Override
-    public void showParkingPosition(List<Parking> list) {
+    public void centerCameraForParkings(List<Parking> list) {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+        for (Map.Entry<Long, MarkerOptions> entry : parkingMarkerMap.entrySet())
+        {
+            builder.include(entry.getValue().getPosition());
+        }
+        LatLngBounds bounds = builder.build();
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
+        mMap.animateCamera(cu);
+    }
+
+    @Override
+    public void showParkingPosition(Parking parking) {
+
+
+        MarkerOptions parkingMarker = new MarkerOptions().position(new LatLng(parking.getCoordinates().getLatitude(),parking.getCoordinates().getLongitude())).title(parking.getName());
+        parkingMarker.icon(BitmapDescriptorFactory.defaultMarker((BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.addMarker(parkingMarker);
+        parkingMarkerMap.put(parking.getId(),parkingMarker);
     }
 
     @Override

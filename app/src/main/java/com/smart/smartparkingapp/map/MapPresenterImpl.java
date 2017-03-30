@@ -24,6 +24,7 @@ public class MapPresenterImpl implements MapPresenter, MapPresenterCallBackFromM
     private Coordinates coordinates;
     private final MapModel mapModel;
     LoginData loginData;
+    List<Parking> parkingList;
     private final Handler handler = new Handler();
 
 
@@ -71,6 +72,7 @@ public class MapPresenterImpl implements MapPresenter, MapPresenterCallBackFromM
 
     @Override
     public void getParkingListResult(final List<Parking> list) {
+        parkingList= list;
         Log.d("...","getParkingListResult()");
         getView().initMQTT(list);
         Log.d("...", "getParkingListResult executed");
@@ -78,7 +80,11 @@ public class MapPresenterImpl implements MapPresenter, MapPresenterCallBackFromM
             @Override
             public void run() {
 
-                getView().showParkingPosition(list);
+                for (Parking p:list
+                     ) {
+                    getView().showParkingPosition(p);
+                }
+                getView().centerCameraForParkings(list);
             }
         });
 

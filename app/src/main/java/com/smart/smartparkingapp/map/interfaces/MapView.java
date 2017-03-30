@@ -16,11 +16,13 @@ public interface MapView {
 
     void createUserMarker(LatLng coordinates);
 
-    void showParkingPosition(List<Parking> list);
+    void showParkingPosition(Parking p);
 
     void initMQTT(List<Parking> list);
 
     void moveUserMarker(LatLng latLng);
 
     void moveUserCamera(LatLng latLng);
+
+    void centerCameraForParkings(List<Parking> list);
 }
