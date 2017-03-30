@@ -110,11 +110,11 @@ public class NetworkServiceImpl implements NetworkService {
     public void getFavoriteParking(FavoriteParkingCallback callback) {
         //todo change it!
         ArrayList<Parking> result = new ArrayList<Parking>();
-        result.add(new Parking((long)1,100,10,"parking 1", new Coordinates(20,20)));
-        result.add(new Parking((long)2,100,10,"parking 2", new Coordinates(20,20)));
-        result.add(new Parking((long)3,100,10,"parking 3", new Coordinates(20,20)));
-        result.add(new Parking((long)4,100,10,"parking 4", new Coordinates(20,20)));
-        result.add(new Parking((long)5,100,10,"parking 5", new Coordinates(20,20)));
+        result.add(new Parking((long)1,100,10,"parking 1", new Coordinates(20,20),""));
+        result.add(new Parking((long)2,100,10,"parking 2", new Coordinates(20,20),""));
+        result.add(new Parking((long)3,100,10,"parking 3", new Coordinates(20,20),""));
+        result.add(new Parking((long)4,100,10,"parking 4", new Coordinates(20,20),""));
+        result.add(new Parking((long)5,100,10,"parking 5", new Coordinates(20,20),""));
 
         callback.onFavoriteParkingResult(result);
 
@@ -151,7 +151,7 @@ public class NetworkServiceImpl implements NetworkService {
                 .addHeader("Authorization","Bearer " + loginData.getAccess_token())
                 .build();
 
-        Log.d("...", "map getParkingList request " + request.toString() + "JSON: " + json);
+        Log.d("...", "NetworkServiceImpl getParkingList request " + request.toString() + "JSON: " + json);
 
         Response response = null;
         try {
@@ -160,18 +160,15 @@ public class NetworkServiceImpl implements NetworkService {
                     .execute();
 
             String responseJson = response.body().string();
-            Log.d("...", "view getParkingList result " + responseJson);
-
-            //List<Parking> parkingList = objectMapper.readValue(responseJson, new TypeReference<List<Parking>>(){});
+            //Log.d("...", "NetworkServiceImpl getParkingList result " + responseJson);
 
             List<Parking> list = objectMapper.readValue(responseJson, TypeFactory.defaultInstance().constructCollectionType(List.class,
                     Parking.class));
 
-            Log.d("...", "view getParkingList list " + list.toString());
+            Log.d("...", "NetworkServiceImpl getParkingList list " + list.toString());
 
             parkingListCallback.getParkingListResult(list);
-            //LoginData loginData = objectMapper.readValue(responseJson, LoginData.class);
-            //Log.d("...", "view getParkingList result loginData object" + loginData.toString());
+
         } catch (IOException e) {
             e.printStackTrace();
         }

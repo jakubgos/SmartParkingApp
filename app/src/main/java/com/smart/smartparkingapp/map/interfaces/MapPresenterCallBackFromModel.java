@@ -10,7 +10,4 @@ import java.util.List;
 public interface MapPresenterCallBackFromModel {
     void getParkingListResult(List<Parking> list);
 
-    void mQTTchangeInd(List<Parking> result);
-
-    void mQTTFailure(String s);
 }

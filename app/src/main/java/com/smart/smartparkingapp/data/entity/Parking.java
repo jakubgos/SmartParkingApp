@@ -18,15 +18,31 @@ public class Parking {
 
     private Coordinates coordinates;
 
+    private String image;
+
+
     public Parking() {
     }
 
-    public Parking(Long id, int maxCapacity, int availablePlaces, String name, Coordinates coordinates) {
+    public Parking(Long id, int maxCapacity, int availablePlaces, String name, Coordinates coordinates, String image) {
         this.id = id;
         this.maxCapacity = maxCapacity;
         this.availablePlaces = availablePlaces;
         this.name = name;
         this.coordinates = coordinates;
+        this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "Parking{" +
+                "id=" + id +
+                ", maxCapacity=" + maxCapacity +
+                ", availablePlaces=" + availablePlaces +
+                ", name='" + name + '\'' +
+                ", coordinates=" + coordinates +
+                ", image='" + image + '\'' +
+                '}';
     }
 
     public Long getId() {
@@ -69,14 +85,11 @@ public class Parking {
         this.coordinates = coordinates;
     }
 
-    @Override
-    public String toString() {
-        return "Parking{" +
-                "id=" + id +
-                ", maxCapacity=" + maxCapacity +
-                ", availablePlaces=" + availablePlaces +
-                ", name='" + name + '\'' +
-                ", coordinates=" + coordinates +
-                '}';
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

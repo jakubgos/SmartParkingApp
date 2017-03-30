@@ -12,6 +12,4 @@ import java.util.List;
  */
 public interface MapModel {
     void getParkingList(LoginData loginData, Coordinates coordinates, MapPresenterCallBackFromModel callBack);
-
-    void initMQTT(List<Parking> list, final MapPresenterCallBackFromModel callBack);
 }

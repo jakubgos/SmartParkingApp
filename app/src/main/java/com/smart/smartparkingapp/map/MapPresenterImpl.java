@@ -4,17 +4,14 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.smart.smartparkingapp.data.MQTTServiceImpl;
 import com.smart.smartparkingapp.data.NetworkServiceImpl;
 import com.smart.smartparkingapp.data.entity.Coordinates;
 import com.smart.smartparkingapp.data.entity.LoginData;
 import com.smart.smartparkingapp.data.entity.Parking;
-import com.smart.smartparkingapp.map.interfaces.MQTTService;
 import com.smart.smartparkingapp.map.interfaces.MapModel;
 import com.smart.smartparkingapp.map.interfaces.MapPresenter;
 import com.smart.smartparkingapp.map.interfaces.MapPresenterCallBackFromModel;
 import com.smart.smartparkingapp.map.interfaces.MapView;
-import com.smart.smartparkingapp.parkingList.interfaces.ParkingListModel;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -32,7 +29,7 @@ public class MapPresenterImpl implements MapPresenter, MapPresenterCallBackFromM
 
     public MapPresenterImpl(MapView view) {
         this.view = new WeakReference<>(view);
-        this.mapModel = new MapModelImpl(new NetworkServiceImpl(), new MQTTServiceImpl());
+        this.mapModel = new MapModelImpl(new NetworkServiceImpl());
         //this.loginModelOps = new LoginModel(this, new NetworkServiceImpl());
     }
 
@@ -83,28 +80,5 @@ public class MapPresenterImpl implements MapPresenter, MapPresenterCallBackFromM
         });
 
     }
-
-    @Override
-    public void mQTTchangeInd(final List<Parking> result) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("...", "mQTTchangeInd recived in presenter with data: " + result.toString());
-
-            }
-        });
-    }
-
-    @Override
-    public void mQTTFailure(final String s) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("...", "mQTTchangeInd mQTTFailure in presenter with data: " + s);
-
-            }
-        });
-    }
-
 
 }
