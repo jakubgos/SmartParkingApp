@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.smart.smartparkingapp.R;
@@ -48,7 +50,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.io.IOException;
 import java.util.List;
 
-public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener, MapView, MqttCallback{
+public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, MapView, MqttCallback{
 
     private GoogleMap mMap;
     MapPresenter mPresenter;
@@ -108,11 +110,6 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     @Override
@@ -186,15 +183,23 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
             return;
         }
 
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
 
         Log.d("...","GPS started");
     }
 
     @Override
-    public void showUserLocation(Coordinates coordinates) {
+    public void showUserLocation(LatLng latLng) {
+        MarkerOptions marker = new MarkerOptions().position(latLng).title("You");
+        marker.icon(BitmapDescriptorFactory.defaultMarker((BitmapDescriptorFactory.HUE_ORANGE)));
+        mMap.addMarker(marker);    }
 
+    @Override
+    public void moveMapUserCamera(LatLng latLng) {
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);
     }
 
     @Override
@@ -204,7 +209,8 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void initMQTT(final List<Parking> list){
-        final int parking_num = list.size();
+        Log.d("...","view initMQTT()");
+
         String clientId = MqttClient.generateClientId();
         final MqttAndroidClient client = new MqttAndroidClient(this.getApplicationContext(), "tcp://192.168.0.103:1883", clientId);
         try{
@@ -218,7 +224,7 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.d("Mqtt","Login successful");
-                    for (int i = 0; i<parking_num; i++){
+                    for (int i = 0; i<list.size(); i++){
                         Long parking_id = list.get(i).getId();
                         final String topic = "parking/"+parking_id;//tutaj lista topiców odpowiadających wszystkim parkingom
                         try{

@@ -1,5 +1,6 @@
 package com.smart.smartparkingapp.map.interfaces;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.smart.smartparkingapp.data.entity.Coordinates;
 import com.smart.smartparkingapp.data.entity.Parking;
 
@@ -13,9 +14,11 @@ public interface MapView {
 
     void initGps();
 
-    void showUserLocation(Coordinates coordinates);
+    void showUserLocation(LatLng coordinates);
 
     void showParkingPosition(List<Parking> list);
 
     void initMQTT(List<Parking> list);
+
+    void moveMapUserCamera(LatLng latLng);
 }

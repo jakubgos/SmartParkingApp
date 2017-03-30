@@ -3,6 +3,7 @@ package com.smart.smartparkingapp.map;
 import android.os.Handler;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.smart.smartparkingapp.data.MQTTServiceImpl;
 import com.smart.smartparkingapp.data.NetworkServiceImpl;
 import com.smart.smartparkingapp.data.entity.Coordinates;
@@ -57,18 +58,20 @@ public class MapPresenterImpl implements MapPresenter, MapPresenterCallBackFromM
     public void reportLocation(Coordinates coordinates) {
         Log.d("...", "reportLocation");
 
+        getView().showUserLocation(new LatLng(coordinates.getLatitude(),coordinates.getLongitude()));
+
         //first location update
         if (this.coordinates == null) {
             Log.d("...", "reportLocation, first coordinates, getting parking list ");
-
             mapModel.getParkingList(loginData, coordinates, this);
+            getView().moveMapUserCamera(new LatLng(coordinates.getLatitude(),coordinates.getLongitude()));
         }
         this.coordinates = coordinates;
-        getView().showUserLocation(coordinates);
     }
 
     @Override
     public void getParkingListResult(final List<Parking> list) {
+        Log.d("...","getParkingListResult()");
         getView().initMQTT(list);
         Log.d("...", "getParkingListResult executed");
         handler.post(new Runnable() {
