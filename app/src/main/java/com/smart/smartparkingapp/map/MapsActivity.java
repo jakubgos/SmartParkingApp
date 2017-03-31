@@ -8,7 +8,9 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.NavigationView;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -24,6 +26,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,10 +64,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, MapView, MqttCallback{
+public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, MapView, MqttCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener{
+
+    @Override
+    public void  onInfoWindowClick (Marker marker){
+        Log.d("Info", "Info pressed");
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker){
+        Log.d("Marker", "Marker pressed");
+        BottomSheetDialogFragment bottomSheetDialogFragment = new BottomSheetDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString("Parkingname", marker.getTitle());
+        bundle.putLong("Id",(Long) marker.getTag());
+
+        bottomSheetDialogFragment.setArguments(bundle);
+        bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+
+        return false;
+    }
 
 
-    
     class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter{
         private final View mContents;
         CustomInfoWindowAdapter(){
@@ -174,6 +195,8 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
 
         mMap = googleMap;
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+        mMap.setOnMarkerClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
     }
 
     @Override
@@ -287,6 +310,7 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
         parkingMarker.snippet(prepareParkingSnippet(parkingToModify));
         Log.d("Parking to modify",prepareParkingSnippet(parkingToModify));
         Marker resultMarker = mMap.addMarker(parkingMarker);
+        resultMarker.setTag(parkingToModify.getId());
         parkingMarkerMap.put(parkingToModify.getId(),resultMarker);
     }
 
@@ -311,6 +335,7 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
         parkingMarker.snippet(prepareParkingSnippet(parking));
         Log.d("Parking snippet",prepareParkingSnippet(parking));
         Marker resultMarker = mMap.addMarker(parkingMarker);
+        resultMarker.setTag(parking.getId());
         parkingMarkerMap.put(parking.getId(),resultMarker);
     }
 
