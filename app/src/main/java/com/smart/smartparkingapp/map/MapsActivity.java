@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,8 +19,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.maps.CameraUpdate;
@@ -57,6 +62,56 @@ import java.util.List;
 import java.util.Map;
 
 public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, MapView, MqttCallback{
+
+
+    
+    class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter{
+        private final View mContents;
+        CustomInfoWindowAdapter(){
+            mContents = getLayoutInflater().inflate(R.layout.marker_bubble, null);
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker){
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker){
+            if (marker.getTitle() != "You"){
+                render(marker, mContents);
+                return mContents;
+            }else{
+                return null;
+            }
+        }
+
+        private void render(Marker marker, View view){
+            String title = marker.getTitle();
+            TextView titleUI = ((TextView) view.findViewById(R.id.title_park));
+            if (title != null){
+                SpannableString titleText = new SpannableString(title);
+                titleText.setSpan(new ForegroundColorSpan(Color.RED),0,titleText.length(),0);
+                titleUI.setText(titleText);
+            }else {
+                titleUI.setText("");
+            }
+
+            String snippet = marker.getSnippet();
+            TextView snippetUi = ((TextView) view.findViewById(R.id.frees));
+            if (snippet != null ) {
+                SpannableString snippetText = new SpannableString(snippet);
+                snippetText.setSpan(new ForegroundColorSpan(Color.MAGENTA), 0, snippet.length(), 0);
+                //snippetText.setSpan(new ForegroundColorSpan(Color.BLUE), 12, snippet.length(), 0);
+                snippetUi.setText(snippetText);
+            } else {
+                snippetUi.setText("");
+            }
+        }
+    }
+
+
+
 
     private GoogleMap mMap;
     MapPresenter mPresenter;
@@ -116,7 +171,9 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
     }
 
     @Override
@@ -224,9 +281,11 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
         Marker markerToUpdate = parkingMarkerMap.remove(parkingToModify.getId());
         markerToUpdate.remove();
 
-        MarkerOptions parkingMarker = new MarkerOptions().position(new LatLng(parkingToModify.getCoordinates().getLatitude(),parkingToModify.getCoordinates().getLongitude())).title(parkingToModify.getName());
+        MarkerOptions parkingMarker = new MarkerOptions().position(new LatLng(parkingToModify.getCoordinates().getLatitude(),parkingToModify.getCoordinates().getLongitude())).snippet(parkingToModify.getAvailablePlaces()+" / "+parkingToModify.getMaxCapacity()).title(parkingToModify.getName());
         parkingMarker.icon(BitmapDescriptorFactory.defaultMarker((determineColorMarker(parkingToModify))));
         parkingMarker.title(prepareParkingDescription(parkingToModify));
+        parkingMarker.snippet(prepareParkingSnippet(parkingToModify));
+        Log.d("Parking to modify",prepareParkingSnippet(parkingToModify));
         Marker resultMarker = mMap.addMarker(parkingMarker);
         parkingMarkerMap.put(parkingToModify.getId(),resultMarker);
     }
@@ -246,9 +305,11 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void showParkingPosition(Parking parking) {
-        MarkerOptions parkingMarker = new MarkerOptions().position(new LatLng(parking.getCoordinates().getLatitude(),parking.getCoordinates().getLongitude())).title(parking.getName());
+        MarkerOptions parkingMarker = new MarkerOptions().position(new LatLng(parking.getCoordinates().getLatitude(),parking.getCoordinates().getLongitude())).snippet(parking.getAvailablePlaces()+" / "+parking.getMaxCapacity()).title(parking.getName());
         parkingMarker.icon(BitmapDescriptorFactory.defaultMarker((determineColorMarker(parking))));
         parkingMarker.title(prepareParkingDescription(parking));
+        parkingMarker.snippet(prepareParkingSnippet(parking));
+        Log.d("Parking snippet",prepareParkingSnippet(parking));
         Marker resultMarker = mMap.addMarker(parkingMarker);
         parkingMarkerMap.put(parking.getId(),resultMarker);
     }
@@ -267,8 +328,12 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private String prepareParkingDescription(Parking parking) {
-        return parking.getName()+" " + parking.getAvailablePlaces() + " / " + parking.getMaxCapacity();
+        return parking.getName();
 
+    }
+
+    private String prepareParkingSnippet(Parking parking){
+        return parking.getAvailablePlaces() + " / " + parking.getMaxCapacity();
     }
 
     @Override
