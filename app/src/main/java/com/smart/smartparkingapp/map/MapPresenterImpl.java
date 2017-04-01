@@ -100,25 +100,40 @@ public class MapPresenterImpl implements MapPresenter, MapPresenterCallBackFromM
                     getView().showParkingPosition(p);
                 }
                 getView().centerCameraForParkings(list);
-             /*   try {
+
+            }
+        });
+/* F
+//OR TEST ONLY
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
                     Log.d("...","sleep() start");
 
                     Thread.sleep(5000);
                     Log.d("...","sleep end()");
 
-                    Parking parkingtotest= list.get(1);
+                    final Parking parkingtotest= list.get(1);
 
                     parkingtotest.setAvailablePlaces(11);
                     Log.d("...",parkingtotest.toString());
-                    getView().updateParkingMarker(parkingtotest);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getView().updateParkingMarker(parkingtotest);
+
+                        }
+                    });
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                */
             }
         });
 
+        t.start();
+*/
 
 
     }

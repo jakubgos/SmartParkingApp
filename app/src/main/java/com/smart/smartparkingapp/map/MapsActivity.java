@@ -301,17 +301,11 @@ public class  MapsActivity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void updateParkingMarker(Parking parkingToModify) {
 
-        Marker markerToUpdate = parkingMarkerMap.remove(parkingToModify.getId());
-        markerToUpdate.remove();
-
-        MarkerOptions parkingMarker = new MarkerOptions().position(new LatLng(parkingToModify.getCoordinates().getLatitude(),parkingToModify.getCoordinates().getLongitude())).snippet(parkingToModify.getAvailablePlaces()+" / "+parkingToModify.getMaxCapacity()).title(parkingToModify.getName());
-        parkingMarker.icon(BitmapDescriptorFactory.defaultMarker((determineColorMarker(parkingToModify))));
-        parkingMarker.title(prepareParkingDescription(parkingToModify));
-        parkingMarker.snippet(prepareParkingSnippet(parkingToModify));
+        Marker markerToUpdate = parkingMarkerMap.get(parkingToModify.getId());
+        markerToUpdate.setIcon(BitmapDescriptorFactory.defaultMarker((determineColorMarker(parkingToModify))));
+        markerToUpdate.setTitle(prepareParkingDescription(parkingToModify));
+        markerToUpdate.setSnippet(prepareParkingSnippet(parkingToModify));
         Log.d("Parking to modify",prepareParkingSnippet(parkingToModify));
-        Marker resultMarker = mMap.addMarker(parkingMarker);
-        resultMarker.setTag(parkingToModify.getId());
-        parkingMarkerMap.put(parkingToModify.getId(),resultMarker);
     }
 
     @Override
